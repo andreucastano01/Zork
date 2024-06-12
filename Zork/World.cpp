@@ -2,10 +2,11 @@
 
 World::World() {
 	player = nullptr;
+	isFinished = false;
 }
 
 World::~World() {
-
+	entities.clear();
 }
 
 void World::createEntities() {
@@ -95,4 +96,96 @@ void World::createEntities() {
 
 	entities.push_back(player);
 	entities.push_back(cellmate);
+
+	room1->contains.push_back(exit12);
+	room1->contains.push_back(exit17);
+	room2->contains.push_back(exit21);
+	room2->contains.push_back(exit23);
+	room2->contains.push_back(exit24);
+	room2->contains.push_back(exit28);
+	room3->contains.push_back(exit32);
+	room3->contains.push_back(exit35);
+	room3->contains.push_back(exit36);
+	room3->contains.push_back(exit37);
+	room4->contains.push_back(exit42);
+	room5->contains.push_back(exit53);
+	room6->contains.push_back(exit63);
+	room7->contains.push_back(exit71);
+	room7->contains.push_back(exit73);
+	room8->contains.push_back(exit82);
+}
+
+void World::Play() {
+	while (!isFinished) {
+		for (Entity* entity : entities) {
+			if (entity == player->location) {
+				std::cout << entity->description << std::endl;
+				readInput();
+			}
+		}
+	}
+}
+
+void World::readInput() {
+	std::string input;
+	std::getline(std::cin, input);
+
+	std::vector<std::string> words;
+	std::istringstream iss(input);
+	std::string word;
+	while (iss >> word) {
+		std::transform(word.begin(), word.end(), word.begin(), ::tolower); //Passing all to lower so I dont have problems with words
+		words.push_back(word);
+	}
+
+	if (words.size() == 0) {
+		std::cout << "No command provided." << std::endl;
+		readInput();
+		return;
+	}
+
+	if (words[0].compare("move") == 0) {
+		//Poner condicion para que no pete si solo pongo move
+		if (words[1].compare("north") == 0) {
+			player->Move(Coordinates::NORTH);
+		}
+		else if (words[1].compare("east") == 0) {
+			player->Move(Coordinates::EAST);
+		}
+		else if (words[1].compare("west") == 0) {
+			player->Move(Coordinates::WEST);
+		}
+		else if (words[1].compare("south") == 0) {
+			player->Move(Coordinates::SOUTH);
+		}
+	}
+	else if (words[0].compare("north") == 0) {
+		player->Move(Coordinates::NORTH);
+	}
+	else if (words[0].compare("east") == 0) {
+		player->Move(Coordinates::EAST);
+	}
+	else if (words[0].compare("west") == 0) {
+		player->Move(Coordinates::WEST);
+	}
+	else if (words[0].compare("south") == 0) {
+		player->Move(Coordinates::SOUTH);
+	}
+	else if (words[0].compare("exit") == 0) {
+		isFinished = true;
+	}
+	else if (words[0].compare("help") == 0) {
+		std::cout << "Available commands:" << std::endl;
+		std::cout << "  - 'north': Move the player to the north." << std::endl;
+		std::cout << "  - 'east': Move the player to the east." << std::endl;
+		std::cout << "  - 'west': Move the player to the west." << std::endl;
+		std::cout << "  - 'south': Move the player to the south." << std::endl;
+		std::cout << "  - 'move direction': Move the player to a direction." << std::endl;
+		std::cout << "  - 'exit': Exit the game." << std::endl;
+		std::cout << "  - 'help': For showing this help message." << std::endl;
+	}
+	else {
+		std::cout << "I can't understand you, please repeat the accion" << std::endl;
+		readInput();
+	}
 }
