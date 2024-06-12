@@ -1,10 +1,13 @@
 #include "Creature.h"
 
-Creature::Creature(std::string name, std::string description) : Entity(name, description)
-{
-	location = nullptr;
+Creature::Creature(std::string name, std::string description, Room* loc) : Entity(name, description, EntityType::CREATURE) {
+	location = loc;
 }
 
-Creature::~Creature()
-{
+Creature::~Creature() {
+
+}
+
+void Creature::Update() {
+
 }

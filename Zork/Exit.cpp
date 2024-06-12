@@ -1,12 +1,16 @@
 #include "Exit.h"
 
-Exit::Exit(std::string name, std::string description, Coordinates direction) : Entity(name, description)
-{
+Exit::Exit(Coordinates direction, Room* src, Room* dst) 
+	: Entity(EntityType::EXIT) {
 	this->direction = direction;
-	source = nullptr;
-	destination = nullptr;
+	source = src;
+	destination = dst;
 }
 
 Exit::~Exit() {
+
+}
+
+void Exit::Update() {
 
 }

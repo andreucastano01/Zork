@@ -15,6 +15,8 @@ public:
 	Room* source;
 	Room* destination;
 
-	Exit(std::string name, std::string description, Coordinates direction);
+	Exit(Coordinates direction, Room* src, Room* dst);
 	~Exit();
+
+	void Update() override;
 };

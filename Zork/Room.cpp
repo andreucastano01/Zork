@@ -1,9 +1,13 @@
 #include "Room.h"
 
-Room::Room(std::string name, std::string description) : Entity(name, description) {
+Room::Room(std::string name, std::string description) : Entity(name, description, EntityType::ROOM) {
 
 }
 
-Room::~Room()
-{
+Room::~Room() {
+
+}
+
+void Room::Update() {
+
 }

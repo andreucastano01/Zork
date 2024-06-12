@@ -2,7 +2,8 @@
 #include "Creature.h"
 
 class NPC : public Creature {
-	NPC(std::string name, std::string description);
+public:
+	NPC(std::string name, std::string description, Room* location);
 	~NPC();
 };
 

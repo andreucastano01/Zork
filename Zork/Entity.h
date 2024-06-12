@@ -16,6 +16,9 @@ public:
 	std::string description;
 	std::vector<Entity*> contains; //If we need entities inside other entities
 
-	Entity(std::string name, std::string description);
+	Entity(EntityType type);
+	Entity(std::string name, std::string description, EntityType type);
 	~Entity();
+
+	virtual void Update();
 };
