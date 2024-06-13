@@ -6,6 +6,11 @@ World::World() {
 }
 
 World::~World() {
+	//We need to delete all the entities before cleaning
+	for (Entity* entity : entities) {
+		delete entity;
+	}
+
 	entities.clear();
 }
 
@@ -83,12 +88,13 @@ void World::createEntities() {
 	entities.push_back(exit63);
 
 	//Items
-	Item* toilet = new Item("Toilet", "A toilet you need to move", room1);
-	Item* key = new Item("Key", "A key for open a door", room7);
-	Item* lantern = new Item("Lantern", "Is a good idea to have light", room1);
+	Item* toilet = new Item("toilet", "A toilet you need to move", room1);
+	Item* lantern = new Item("lantern", "Is a good idea to have light", room1);
+	Item* key = new Item("key", "A key for open a door", room7);
 
-	entities.push_back(key);
+	entities.push_back(toilet);
 	entities.push_back(lantern);
+	entities.push_back(key);
 
 	//Creatures
 	player = new Player("Player", "The player", room1);
@@ -113,6 +119,11 @@ void World::createEntities() {
 	room7->contains.push_back(exit71);
 	room7->contains.push_back(exit73);
 	room8->contains.push_back(exit82);
+
+	//Room contains items
+	room1->contains.push_back(toilet);
+	room1->contains.push_back(lantern);
+	room1->contains.push_back(key);
 }
 
 void World::Play() {
@@ -159,7 +170,16 @@ void World::readInput() {
 			player->Move(Coordinates::WEST);
 		}
 		else if (words[0].compare("south") == 0) {
+			if (player->location->name.compare("First floor")) {
+				std::cout << "You escaped the prison!" << std::endl;
+				isFinished = true;
+			}
 			player->Move(Coordinates::SOUTH);
+		}
+
+		//Inventory
+		else if (words[0].compare("inventory") == 0) {
+			player->SeeInventory();
 		}
 
 		//Exit command
@@ -175,6 +195,8 @@ void World::readInput() {
 			std::cout << "  - 'west': Move the player to the west." << std::endl;
 			std::cout << "  - 'south': Move the player to the south." << std::endl;
 			std::cout << "  - 'move direction': Move the player to a direction." << std::endl;
+			std::cout << "  - 'take/get/grab item': Grab an item and put it on your inventory." << std::endl;
+			std::cout << "  - 'inventory': See the inventory." << std::endl;
 			std::cout << "  - 'exit': Exit the game." << std::endl;
 			std::cout << "  - 'help': For showing this help message." << std::endl;
 		}
@@ -200,8 +222,22 @@ void World::readInput() {
 				player->Move(Coordinates::WEST);
 			}
 			else if (words[1].compare("south") == 0) {
+				if (player->location->name.compare("First floor")) {
+					std::cout << "You escaped the prison!" << std::endl;
+					isFinished = true;
+				}
 				player->Move(Coordinates::SOUTH);
 			}
+		}
+
+		//Get an item
+		else if (words[0].compare("take") == 0 || words[0].compare("get") == 0 || words[0].compare("grab") == 0) {
+			player->GetItem(words[1]);
+		}
+
+		//Drop an item
+		else if (words[0].compare("drop") == 0) {
+			player->DropItem(words[1]);
 		}
 
 		else {

@@ -1,7 +1,9 @@
 #pragma once
+
+#include <iostream>
 #include "Creature.h"
 #include "Exit.h"
-#include <iostream>
+#include "Item.h"
 
 class Player : public Creature {
 public:
@@ -9,5 +11,8 @@ public:
 	~Player();
 
 	void Move(Coordinates direction);
+	void GetItem(std::string item);
+	void DropItem(std::string item);
+	void SeeInventory();
 };
 

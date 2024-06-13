@@ -11,7 +11,7 @@ Entity::Entity(std::string name, std::string description, EntityType type) {
 }
 
 Entity::~Entity() {
-
+	contains.clear();
 }
 
 void Entity::Update() {
