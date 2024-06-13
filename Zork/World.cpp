@@ -63,7 +63,7 @@ void World::createEntities() {
 	Exit* exit36 = new Exit(Coordinates::SOUTH, room3, room6);
 	Exit* exit63 = new Exit(Coordinates::NORTH, room6, room3);
 
-	//Exit Win = new Exit(Coordinates::SOUTH, (Room*)room4, ?);
+	//Exit Win = new Exit(Coordinates::SOUTH, room4, ?);
 
 	entities.push_back(exit12);
 	entities.push_back(exit21);
@@ -138,52 +138,78 @@ void World::readInput() {
 		words.push_back(word);
 	}
 
+	//We separate the commands for words in the input
+	//0 words = no input
 	if (words.size() == 0) {
 		std::cout << "No command provided." << std::endl;
 		readInput();
 		return;
 	}
 
-	if (words[0].compare("move") == 0) {
-		//Poner condicion para que no pete si solo pongo move
-		if (words[1].compare("north") == 0) {
+	//1 word
+	else if (words.size() == 1) {
+		//Movement commands
+		if (words[0].compare("north") == 0) {
 			player->Move(Coordinates::NORTH);
 		}
-		else if (words[1].compare("east") == 0) {
+		else if (words[0].compare("east") == 0) {
 			player->Move(Coordinates::EAST);
 		}
-		else if (words[1].compare("west") == 0) {
+		else if (words[0].compare("west") == 0) {
 			player->Move(Coordinates::WEST);
 		}
-		else if (words[1].compare("south") == 0) {
+		else if (words[0].compare("south") == 0) {
 			player->Move(Coordinates::SOUTH);
 		}
+
+		//Exit command
+		else if (words[0].compare("exit") == 0) {
+			isFinished = true;
+		}
+
+		//Help command
+		else if (words[0].compare("help") == 0) {
+			std::cout << "Available commands:" << std::endl;
+			std::cout << "  - 'north': Move the player to the north." << std::endl;
+			std::cout << "  - 'east': Move the player to the east." << std::endl;
+			std::cout << "  - 'west': Move the player to the west." << std::endl;
+			std::cout << "  - 'south': Move the player to the south." << std::endl;
+			std::cout << "  - 'move direction': Move the player to a direction." << std::endl;
+			std::cout << "  - 'exit': Exit the game." << std::endl;
+			std::cout << "  - 'help': For showing this help message." << std::endl;
+		}
+
+		else {
+			std::cout << "I can't understand you, please repeat the accion" << std::endl;
+			readInput();
+		}
 	}
-	else if (words[0].compare("north") == 0) {
-		player->Move(Coordinates::NORTH);
+
+	//2 words
+	else if (words.size() == 2) {
+		//Movement commands
+		if (words[0].compare("move") == 0) {
+			//Poner condicion para que no pete si solo pongo move
+			if (words[1].compare("north") == 0) {
+				player->Move(Coordinates::NORTH);
+			}
+			else if (words[1].compare("east") == 0) {
+				player->Move(Coordinates::EAST);
+			}
+			else if (words[1].compare("west") == 0) {
+				player->Move(Coordinates::WEST);
+			}
+			else if (words[1].compare("south") == 0) {
+				player->Move(Coordinates::SOUTH);
+			}
+		}
+
+		else {
+			std::cout << "I can't understand you, please repeat the accion" << std::endl;
+			readInput();
+		}
 	}
-	else if (words[0].compare("east") == 0) {
-		player->Move(Coordinates::EAST);
-	}
-	else if (words[0].compare("west") == 0) {
-		player->Move(Coordinates::WEST);
-	}
-	else if (words[0].compare("south") == 0) {
-		player->Move(Coordinates::SOUTH);
-	}
-	else if (words[0].compare("exit") == 0) {
-		isFinished = true;
-	}
-	else if (words[0].compare("help") == 0) {
-		std::cout << "Available commands:" << std::endl;
-		std::cout << "  - 'north': Move the player to the north." << std::endl;
-		std::cout << "  - 'east': Move the player to the east." << std::endl;
-		std::cout << "  - 'west': Move the player to the west." << std::endl;
-		std::cout << "  - 'south': Move the player to the south." << std::endl;
-		std::cout << "  - 'move direction': Move the player to a direction." << std::endl;
-		std::cout << "  - 'exit': Exit the game." << std::endl;
-		std::cout << "  - 'help': For showing this help message." << std::endl;
-	}
+
 	else {
 		std::cout << "I can't understand you, please repeat the accion" << std::endl;
 		readInput();
