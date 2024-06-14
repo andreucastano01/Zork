@@ -1,10 +1,14 @@
 #include "Player.h"
 
 Player::Player(std::string name, std::string description, Room* location) : Creature(name, description, location) {
-
+	hasLantern = false;
 }
 
 Player::~Player() {
+
+}
+
+void Player::Update() {
 
 }
 
@@ -14,6 +18,7 @@ void Player::Move(Coordinates direction) {
 			Exit* exit = (Exit*)entity;
 			if (exit->source == location && exit->direction == direction) {
 				location = exit->destination;
+				location->Description();
 				return;
 			}
 		}

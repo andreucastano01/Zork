@@ -16,14 +16,14 @@ World::~World() {
 
 void World::createEntities() {
 	//Rooms
-	Room* room1 = new Room("Cell", "You seem to be on a cell. If you look around you can see a toilet, a bed, an a cellmate.");
-	Room* room2 = new Room("Basement", "The basement of the prison");
-	Room* room3 = new Room("Hallway", "The hallway. You can see more cells and a closed door.");
-	Room* room4 = new Room("First floor", "The first floor of the prison before the exit");
-	Room* room5 = new Room("Cell 2", "Another cell");
-	Room* room6 = new Room("Cell 3", "Another cell");
-	Room* room7 = new Room("Guard's office", "The guard's office");
-	Room* room8 = new Room("Store", "You can see a sword");
+	Room* room1 = new Room("Cell", "A small, dimly lit cell with cold, stone walls. The air is damp and carries the faint scent of mold. In the floor you can see a bored person.");
+	Room* room2 = new Room("Basement", "The basement of the prison, a dark and foreboding place with a low ceiling and the echo of distant drips of water.");
+	Room* room3 = new Room("Hallway", "A hallway stretches out, lined with more cells. The oppressive silence is broken only by the occasional distant clang.");
+	Room* room4 = new Room("First floor", "The first floor of the prison, where a slight draft hints at the world beyond these walls.");
+	Room* room5 = new Room("Cell 2", "Another cell, nearly identical to the previous one. The walls are equally grim and uninviting.");
+	Room* room6 = new Room("Cell 3", "Yet another cell, this one feels slightly more claustrophobic, with walls that seem to close in.");
+	Room* room7 = new Room("Guard's office", "The guard's office, a stark contrast to the rest of the prison with its slightly warmer atmosphere and faint light filtering through a barred window.");
+	Room* room8 = new Room("Store", "The store, a small room that feels almost out of place in the prison, with relatively cleaner walls and a sense of quiet purpose.");
 
 	entities.push_back(room1);
 	entities.push_back(room2);
@@ -90,11 +90,15 @@ void World::createEntities() {
 	//Items
 	Item* toilet = new Item("toilet", "A toilet you need to move", room1);
 	Item* lantern = new Item("lantern", "Is a good idea to have light", room1);
+	Item* ammo = new Item("ammo", "Ammo for a gun", room6);
 	Item* key = new Item("key", "A key for open a door", room7);
+	Item* gun = new Item("gun", "A gun, it has no ammo", room8);
 
 	entities.push_back(toilet);
 	entities.push_back(lantern);
+	entities.push_back(ammo);
 	entities.push_back(key);
+	entities.push_back(gun);
 
 	//Creatures
 	player = new Player("Player", "The player", room1);
@@ -103,6 +107,7 @@ void World::createEntities() {
 	entities.push_back(player);
 	entities.push_back(cellmate);
 
+	//Rooms contains exits
 	room1->contains.push_back(exit12);
 	room1->contains.push_back(exit17);
 	room2->contains.push_back(exit21);
@@ -123,17 +128,18 @@ void World::createEntities() {
 	//Room contains items
 	room1->contains.push_back(toilet);
 	room1->contains.push_back(lantern);
-	room1->contains.push_back(key);
+	room6->contains.push_back(ammo);
+	room7->contains.push_back(key);
+	room8->contains.push_back(gun);
 }
 
 void World::Play() {
+	std::cout << "I just woke up from a long sleep. I feel disoriented and astonished. I look around and see nothing. On one side on the floor of the room, there is a flashlight." << std::endl;
+	std::cout << std::endl;
+
 	while (!isFinished) {
-		for (Entity* entity : entities) {
-			if (entity == player->location) {
-				std::cout << entity->description << std::endl;
-				readInput();
-			}
-		}
+		readInput();
+		std::cout << std::endl;
 	}
 }
 
@@ -147,6 +153,25 @@ void World::readInput() {
 	while (iss >> word) {
 		std::transform(word.begin(), word.end(), word.begin(), ::tolower); //Passing all to lower so I dont have problems with words
 		words.push_back(word);
+	}
+
+	if (!player->hasLantern) {
+		if (words.size() == 2 && (words[0].compare("take") == 0 || words[0].compare("get") == 0 || words[0].compare("grab") == 0) && words[1].compare("lantern") == 0) {
+			player->GetItem(words[1]);
+			player->hasLantern = true;
+			player->location->Description();
+		}
+		else if (words.size() == 1 && words[0].compare("exit") == 0) {
+			isFinished = true;
+		}
+		else if (words.size() == 1 && words[0].compare("help") == 0) {
+			helpCommands();
+		}
+		else {
+			std::cout << "It's too dark to do and see anything without a lantern." << std::endl;
+			std::cout << std::endl;
+		}
+		return;
 	}
 
 	//We separate the commands for words in the input
@@ -182,6 +207,16 @@ void World::readInput() {
 			player->SeeInventory();
 		}
 
+		//Brief description of the place
+		else if (words[0].compare("description") == 0 || words[0].compare("look") == 0) {
+			player->location->Description();
+		}
+
+		//Join two items (it has to make sense)
+		else if (words[0].compare("join") == 0) {
+
+		}
+
 		//Exit command
 		else if (words[0].compare("exit") == 0) {
 			isFinished = true;
@@ -189,16 +224,7 @@ void World::readInput() {
 
 		//Help command
 		else if (words[0].compare("help") == 0) {
-			std::cout << "Available commands:" << std::endl;
-			std::cout << "  - 'north': Move the player to the north." << std::endl;
-			std::cout << "  - 'east': Move the player to the east." << std::endl;
-			std::cout << "  - 'west': Move the player to the west." << std::endl;
-			std::cout << "  - 'south': Move the player to the south." << std::endl;
-			std::cout << "  - 'move direction': Move the player to a direction." << std::endl;
-			std::cout << "  - 'take/get/grab item': Grab an item and put it on your inventory." << std::endl;
-			std::cout << "  - 'inventory': See the inventory." << std::endl;
-			std::cout << "  - 'exit': Exit the game." << std::endl;
-			std::cout << "  - 'help': For showing this help message." << std::endl;
+			helpCommands();
 		}
 
 		else {
@@ -238,6 +264,7 @@ void World::readInput() {
 		//Drop an item
 		else if (words[0].compare("drop") == 0) {
 			player->DropItem(words[1]);
+			if (words[1].compare("lantern") == 0) player->hasLantern = false;
 		}
 
 		else {
@@ -250,4 +277,18 @@ void World::readInput() {
 		std::cout << "I can't understand you, please repeat the accion" << std::endl;
 		readInput();
 	}
+}
+
+void World::helpCommands() {
+	std::cout << "Available commands:" << std::endl;
+	std::cout << "  - 'north': Move the player to the north." << std::endl;
+	std::cout << "  - 'east': Move the player to the east." << std::endl;
+	std::cout << "  - 'west': Move the player to the west." << std::endl;
+	std::cout << "  - 'south': Move the player to the south." << std::endl;
+	std::cout << "  - 'move direction': Move the player to a direction." << std::endl;
+	std::cout << "  - 'take/get/grab item': Grab an item and put it on your inventory." << std::endl;
+	std::cout << "  - 'inventory': See the inventory." << std::endl;
+	std::cout << "  - 'look/description': Briefly explain the room." << std::endl;
+	std::cout << "  - 'exit': Exit the game." << std::endl;
+	std::cout << "  - 'help': For showing this help message." << std::endl;
 }

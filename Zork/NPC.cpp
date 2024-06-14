@@ -7,3 +7,7 @@ NPC::NPC(std::string name, std::string description, Room* location) : Creature(n
 NPC::~NPC() {
 
 }
+
+void NPC::Update() {
+
+}

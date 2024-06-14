@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h"
+#include <iostream>
 
 class Room : public Entity
 {
@@ -8,5 +9,7 @@ public:
 	~Room();
 
 	void Update() override;
+
+	void Description();
 };
 

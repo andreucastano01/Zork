@@ -26,4 +26,5 @@ public:
 	void createEntities();
 	void Play();
 	void readInput();
+	void helpCommands();
 };

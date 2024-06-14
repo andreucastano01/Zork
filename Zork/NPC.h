@@ -5,5 +5,7 @@ class NPC : public Creature {
 public:
 	NPC(std::string name, std::string description, Room* location);
 	~NPC();
+
+	void Update() override;
 };
 

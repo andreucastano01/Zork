@@ -7,8 +7,12 @@
 
 class Player : public Creature {
 public:
+	bool hasLantern;
+
 	Player(std::string name, std::string description, Room* location);
 	~Player();
+
+	void Update() override;
 
 	void Move(Coordinates direction);
 	void GetItem(std::string item);
