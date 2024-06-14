@@ -18,5 +18,6 @@ public:
 	void GetItem(std::string item);
 	void DropItem(std::string item);
 	void SeeInventory();
+	bool findObjectInventory(Item* itemToFind);
 };
 

@@ -17,6 +17,16 @@ void Player::Move(Coordinates direction) {
 		if (entity->type == EntityType::EXIT) {
 			Exit* exit = (Exit*)entity;
 			if (exit->source == location && exit->direction == direction) {
+				if (exit->closed) {
+					if (findObjectInventory(exit->key)) {
+						std::cout << "You opened the door with a key" << std::endl;
+						exit->closed = false;
+					}
+					else {
+						std::cout << "The door is closed, try to find a key." << std::endl;
+						return;
+					}
+				}
 				location = exit->destination;
 				location->Description();
 				return;
@@ -67,4 +77,17 @@ void Player::SeeInventory() {
 			}
 		}
 	}
+}
+
+bool Player::findObjectInventory(Item* itemToFind) {
+	if (contains.empty()) return false;
+	else {
+		for (Entity* entity : contains) {
+			if (entity->type == EntityType::ITEM) {
+				Item* item = (Item*)entity;
+				if (item->name.compare(itemToFind->name) == 0) return true;
+			}
+		}
+	}
+	return false;
 }

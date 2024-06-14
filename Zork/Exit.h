@@ -1,6 +1,7 @@
 #pragma once
 #include "Entity.h"
 #include "Room.h"
+#include "Item.h"
 
 enum class Coordinates {
 	NORTH,
@@ -14,9 +15,13 @@ public:
 	Coordinates direction;
 	Room* source;
 	Room* destination;
+	bool closed;
+	Item* key;
 
-	Exit(Coordinates direction, Room* src, Room* dst);
+	Exit(Coordinates direction, Room* src, Room* dst, bool clsed);
 	~Exit();
 
 	void Update() override;
+
+	void addKey(Item* key);
 };

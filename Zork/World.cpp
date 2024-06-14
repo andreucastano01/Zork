@@ -37,36 +37,36 @@ void World::createEntities() {
 	//Exits
 	//You can go and come back
 	//Cell 1 - Basement
-	Exit* exit12 = new Exit(Coordinates::NORTH, room1, room2);
-	Exit* exit21 = new Exit(Coordinates::SOUTH, room2, room1);
+	Exit* exit12 = new Exit(Coordinates::NORTH, room1, room2, true);
+	Exit* exit21 = new Exit(Coordinates::SOUTH, room2, room1, true);
 
 	//Basement - Hallway
-	Exit* exit23 = new Exit(Coordinates::WEST, room2, room3);
-	Exit* exit32 = new Exit(Coordinates::EAST, room3, room2);
+	Exit* exit23 = new Exit(Coordinates::WEST, room2, room3, false);
+	Exit* exit32 = new Exit(Coordinates::EAST, room3, room2, false);
 
 	//Basement - First floor
-	Exit* exit24 = new Exit(Coordinates::NORTH, room2, room4);
-	Exit* exit42 = new Exit(Coordinates::NORTH, room4, room2);
+	Exit* exit24 = new Exit(Coordinates::NORTH, room2, room4, false);
+	Exit* exit42 = new Exit(Coordinates::NORTH, room4, room2, false);
 
 	//Cell 1 - Guard's office
-	Exit* exit17 = new Exit(Coordinates::SOUTH, room1, room7);
-	Exit* exit71 = new Exit(Coordinates::WEST, room7, room1);
+	Exit* exit17 = new Exit(Coordinates::SOUTH, room1, room7, false);
+	Exit* exit71 = new Exit(Coordinates::WEST, room7, room1, false);
 
 	//Basement - Store
-	Exit* exit28 = new Exit(Coordinates::EAST, room2, room8);
-	Exit* exit82 = new Exit(Coordinates::WEST, room8, room2);
+	Exit* exit28 = new Exit(Coordinates::EAST, room2, room8, false);
+	Exit* exit82 = new Exit(Coordinates::WEST, room8, room2, false);
 
 	//Hallway - Guard's office
-	Exit* exit37 = new Exit(Coordinates::WEST, room3, room7);
-	Exit* exit73 = new Exit(Coordinates::EAST, room7, room3);
+	Exit* exit37 = new Exit(Coordinates::WEST, room3, room7, true);
+	Exit* exit73 = new Exit(Coordinates::EAST, room7, room3, true);
 
 	//Hallway - Cell 2
-	Exit* exit35 = new Exit(Coordinates::NORTH, room3, room5);
-	Exit* exit53 = new Exit(Coordinates::SOUTH, room5, room3);
+	Exit* exit35 = new Exit(Coordinates::NORTH, room3, room5, false);
+	Exit* exit53 = new Exit(Coordinates::SOUTH, room5, room3, false);
 
 	//Hallway - Cell 3
-	Exit* exit36 = new Exit(Coordinates::SOUTH, room3, room6);
-	Exit* exit63 = new Exit(Coordinates::NORTH, room6, room3);
+	Exit* exit36 = new Exit(Coordinates::SOUTH, room3, room6, false);
+	Exit* exit63 = new Exit(Coordinates::NORTH, room6, room3, false);
 
 	//Exit Win = new Exit(Coordinates::SOUTH, room4, ?);
 
@@ -88,13 +88,13 @@ void World::createEntities() {
 	entities.push_back(exit63);
 
 	//Items
-	Item* toilet = new Item("toilet", "A toilet you need to move", room1);
+	//Item* toilet = new Item("toilet", "A toilet you need to move", room1);
 	Item* lantern = new Item("lantern", "Is a good idea to have light", room1);
 	Item* ammo = new Item("ammo", "Ammo for a gun", room6);
 	Item* key = new Item("key", "A key for open a door", room7);
 	Item* gun = new Item("gun", "A gun, it has no ammo", room8);
 
-	entities.push_back(toilet);
+	//entities.push_back(toilet);
 	entities.push_back(lantern);
 	entities.push_back(ammo);
 	entities.push_back(key);
@@ -126,11 +126,15 @@ void World::createEntities() {
 	room8->contains.push_back(exit82);
 
 	//Room contains items
-	room1->contains.push_back(toilet);
+	//room1->contains.push_back(toilet);
 	room1->contains.push_back(lantern);
 	room6->contains.push_back(ammo);
 	room7->contains.push_back(key);
 	room8->contains.push_back(gun);
+
+	//Some exits needs keys
+	exit12->addKey(key);
+	exit21->addKey(key);
 }
 
 void World::Play() {
@@ -195,7 +199,7 @@ void World::readInput() {
 			player->Move(Coordinates::WEST);
 		}
 		else if (words[0].compare("south") == 0) {
-			if (player->location->name.compare("First floor")) {
+			if (player->location->name.compare("First floor") == 0) {
 				std::cout << "You escaped the prison!" << std::endl;
 				isFinished = true;
 			}
@@ -248,7 +252,7 @@ void World::readInput() {
 				player->Move(Coordinates::WEST);
 			}
 			else if (words[1].compare("south") == 0) {
-				if (player->location->name.compare("First floor")) {
+				if (player->location->name.compare("First floor") == 0) {
 					std::cout << "You escaped the prison!" << std::endl;
 					isFinished = true;
 				}
