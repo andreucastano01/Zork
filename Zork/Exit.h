@@ -18,7 +18,7 @@ public:
 	bool closed;
 	Item* key;
 
-	Exit(Coordinates direction, Room* src, Room* dst, bool clsed);
+	Exit(std::string name, Coordinates direction, Room* src, Room* dst, bool clsed);
 	~Exit();
 
 	void Update() override;

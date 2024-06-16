@@ -4,9 +4,7 @@
 
 class Item : public Entity {
 public:
-	Room* location;
-
-	Item(std::string name, std::string description, Room* loc);
+	Item(std::string name, std::string description);
 	~Item();
 
 	void Update() override;

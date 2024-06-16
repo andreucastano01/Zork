@@ -1,7 +1,7 @@
 #include "Exit.h"
 
-Exit::Exit(Coordinates direction, Room* src, Room* dst, bool clsed) 
-	: Entity(EntityType::EXIT) {
+Exit::Exit(std::string name, Coordinates direction, Room* src, Room* dst, bool clsed) 
+	: Entity(name, EntityType::EXIT) {
 	this->direction = direction;
 	source = src;
 	destination = dst;

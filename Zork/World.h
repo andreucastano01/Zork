@@ -19,6 +19,7 @@ public:
 	std::vector<Entity*> entities;
 	Player* player;
 	bool isFinished;
+	bool commandUnlocked;
 
 	World();
 	~World();

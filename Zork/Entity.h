@@ -17,6 +17,7 @@ public:
 	std::list<Entity*> contains; //If we need entities inside other entities
 
 	Entity(EntityType type);
+	Entity(std::string name, EntityType type);
 	Entity(std::string name, std::string description, EntityType type);
 	~Entity();
 

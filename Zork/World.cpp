@@ -3,6 +3,7 @@
 World::World() {
 	player = nullptr;
 	isFinished = false;
+	commandUnlocked = false;
 }
 
 World::~World() {
@@ -37,36 +38,36 @@ void World::createEntities() {
 	//Exits
 	//You can go and come back
 	//Cell 1 - Basement
-	Exit* exit12 = new Exit(Coordinates::NORTH, room1, room2, true);
-	Exit* exit21 = new Exit(Coordinates::SOUTH, room2, room1, true);
+	Exit* exit12 = new Exit("exit12", Coordinates::NORTH, room1, room2, true);
+	Exit* exit21 = new Exit("exit21", Coordinates::SOUTH, room2, room1, true);
 
 	//Basement - Hallway
-	Exit* exit23 = new Exit(Coordinates::WEST, room2, room3, false);
-	Exit* exit32 = new Exit(Coordinates::EAST, room3, room2, false);
+	Exit* exit23 = new Exit("exit23", Coordinates::WEST, room2, room3, false);
+	Exit* exit32 = new Exit("exit32", Coordinates::EAST, room3, room2, false);
 
 	//Basement - First floor
-	Exit* exit24 = new Exit(Coordinates::NORTH, room2, room4, false);
-	Exit* exit42 = new Exit(Coordinates::NORTH, room4, room2, false);
+	Exit* exit24 = new Exit("exit24", Coordinates::NORTH, room2, room4, false);
+	Exit* exit42 = new Exit("exit42", Coordinates::NORTH, room4, room2, false);
 
 	//Cell 1 - Guard's office
-	Exit* exit17 = new Exit(Coordinates::SOUTH, room1, room7, false);
-	Exit* exit71 = new Exit(Coordinates::WEST, room7, room1, false);
+	Exit* exit17 = new Exit("exit17", Coordinates::SOUTH, room1, room7, true);
+	Exit* exit71 = new Exit("exit71", Coordinates::WEST, room7, room1, false);
 
 	//Basement - Store
-	Exit* exit28 = new Exit(Coordinates::EAST, room2, room8, false);
-	Exit* exit82 = new Exit(Coordinates::WEST, room8, room2, false);
+	Exit* exit28 = new Exit("exit28", Coordinates::EAST, room2, room8, false);
+	Exit* exit82 = new Exit("exit82", Coordinates::WEST, room8, room2, false);
 
 	//Hallway - Guard's office
-	Exit* exit37 = new Exit(Coordinates::WEST, room3, room7, true);
-	Exit* exit73 = new Exit(Coordinates::EAST, room7, room3, true);
+	Exit* exit37 = new Exit("exit37", Coordinates::WEST, room3, room7, true);
+	Exit* exit73 = new Exit("exit73", Coordinates::EAST, room7, room3, true);
 
 	//Hallway - Cell 2
-	Exit* exit35 = new Exit(Coordinates::NORTH, room3, room5, false);
-	Exit* exit53 = new Exit(Coordinates::SOUTH, room5, room3, false);
+	Exit* exit35 = new Exit("exit35", Coordinates::NORTH, room3, room5, false);
+	Exit* exit53 = new Exit("exit53", Coordinates::SOUTH, room5, room3, false);
 
 	//Hallway - Cell 3
-	Exit* exit36 = new Exit(Coordinates::SOUTH, room3, room6, false);
-	Exit* exit63 = new Exit(Coordinates::NORTH, room6, room3, false);
+	Exit* exit36 = new Exit("exit36", Coordinates::SOUTH, room3, room6, false);
+	Exit* exit63 = new Exit("exit63", Coordinates::NORTH, room6, room3, false);
 
 	//Exit Win = new Exit(Coordinates::SOUTH, room4, ?);
 
@@ -89,20 +90,26 @@ void World::createEntities() {
 
 	//Items
 	//Item* toilet = new Item("toilet", "A toilet you need to move", room1);
-	Item* lantern = new Item("lantern", "Is a good idea to have light", room1);
-	Item* ammo = new Item("ammo", "Ammo for a gun", room6);
-	Item* key = new Item("key", "A key for open a door", room7);
-	Item* gun = new Item("gun", "A gun, it has no ammo", room8);
+	Item* lantern = new Item("lantern", "Is a good idea to have light");
+	Item* belt = new Item("belt", "A belt to put objects");
+	Item* key = new Item("key", "A key for open a door");
 
 	//entities.push_back(toilet);
 	entities.push_back(lantern);
-	entities.push_back(ammo);
+	entities.push_back(belt);
 	entities.push_back(key);
-	entities.push_back(gun);
 
 	//Creatures
 	player = new Player("Player", "The player", room1);
-	NPC* cellmate = new NPC("cellmate", "NPC1", room1);
+
+	DialogueOptions option1 = { 1, "Jajajajaja, it seems I have a new cellmate. My name is Jan. What is your name?", {}, true, 2 };
+	DialogueOptions option2 = { 2, "Nice to meet you. Can you help me scratch my back ? Since I lost my hands, it is an impossible task for me.", {} };
+	DialogueOptions option3 = { 3, "Oh, thank you. Now I feel much better. I'm going to tell you a secret. Behind the toilet there is a sewer that will help you escape. But be careful, if they catch you, you will be left without hands.", {} };
+
+	NPC* cellmate = new NPC("cellmate", "A cellmate", room1);
+	cellmate->Add(option1);
+	cellmate->Add(option2);
+	cellmate->Add(option3);
 
 	entities.push_back(player);
 	entities.push_back(cellmate);
@@ -128,22 +135,22 @@ void World::createEntities() {
 	//Room contains items
 	//room1->contains.push_back(toilet);
 	room1->contains.push_back(lantern);
-	room6->contains.push_back(ammo);
+	room7->contains.push_back(belt);
 	room7->contains.push_back(key);
-	room8->contains.push_back(gun);
 
 	//Some exits needs keys
 	exit12->addKey(key);
 	exit21->addKey(key);
+	exit17->addKey(key);
 }
 
 void World::Play() {
-	std::cout << "I just woke up from a long sleep. I feel disoriented and astonished. I look around and see nothing. On one side on the floor of the room, there is a flashlight." << std::endl;
+	std::cout << "I just woke up from a long sleep. I feel disoriented and astonished. I look around and see nothing. On one side on the floor of the room, there is a lantern." << std::endl;
 	std::cout << std::endl;
 
 	while (!isFinished) {
 		readInput();
-		std::cout << std::endl;
+		//std::cout << std::endl;
 	}
 }
 
@@ -217,7 +224,7 @@ void World::readInput() {
 		}
 
 		//Join two items (it has to make sense)
-		else if (words[0].compare("join") == 0) {
+		else if (words[0].compare("put") == 0) {
 
 		}
 
@@ -261,7 +268,7 @@ void World::readInput() {
 		}
 
 		//Get an item
-		else if (words[0].compare("take") == 0 || words[0].compare("get") == 0 || words[0].compare("grab") == 0) {
+		else if (words[0].compare("take") == 0 || words[0].compare("get") == 0 || words[0].compare("grab") == 0 || words[0].compare("pick") == 0) {
 			player->GetItem(words[1]);
 		}
 
@@ -269,6 +276,35 @@ void World::readInput() {
 		else if (words[0].compare("drop") == 0) {
 			player->DropItem(words[1]);
 			if (words[1].compare("lantern") == 0) player->hasLantern = false;
+		}
+
+		else if (words[0].compare("scratch") == 0 && commandUnlocked) {
+			bool exitUnlocked = false;
+			for (Entity* entity : entities) {
+				if (words[1].compare(entity->name) == 0) {
+					NPC* cellmate = (NPC*)entity;
+					cellmate->Talk(3);
+					exitUnlocked = true;
+				}
+			}
+			if (exitUnlocked) {			
+				for (Entity* entity : entities) {
+					if (entity->name.compare("exit17") == 0) {	
+						Exit* exit = (Exit*)entity;
+						exit->closed = false;
+					}	
+				}
+			}
+		}
+
+		else if (words[0].compare("talk") == 0) {
+			for (Entity* entity : entities) {
+				if (words[1].compare(entity->name) == 0) {
+					NPC* npc = (NPC*)entity;
+					npc->Talk();
+					if (words[1].compare("cellmate") == 0) commandUnlocked = true;
+				}
+			}
 		}
 
 		else {
@@ -290,7 +326,7 @@ void World::helpCommands() {
 	std::cout << "  - 'west': Move the player to the west." << std::endl;
 	std::cout << "  - 'south': Move the player to the south." << std::endl;
 	std::cout << "  - 'move direction': Move the player to a direction." << std::endl;
-	std::cout << "  - 'take/get/grab item': Grab an item and put it on your inventory." << std::endl;
+	std::cout << "  - 'take/get/grab/pick item': Grab an item and put it on your inventory." << std::endl;
 	std::cout << "  - 'inventory': See the inventory." << std::endl;
 	std::cout << "  - 'look/description': Briefly explain the room." << std::endl;
 	std::cout << "  - 'exit': Exit the game." << std::endl;
