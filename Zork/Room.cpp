@@ -12,6 +12,7 @@ void Room::Update() {
 
 }
 
+//Describe the room and the items we have in the room
 void Room::Description() {
 	std::cout << name << std::endl;
 	std::cout << description << std::endl;

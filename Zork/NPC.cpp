@@ -12,9 +12,11 @@ void NPC::Update() {
 
 }
 
+//Adding dialogues to an npc
 void NPC::Add(DialogueOptions option){
     conversation.push_back(option);
 }
+
 
 void NPC::Talk(int currentOption) {
     bool answer = false;
@@ -31,8 +33,10 @@ void NPC::Talk(int currentOption) {
             }
         }
         if (answer) {
+            //user input
             int choice;
             std::cin >> choice;
+            //Clean buffer after reading input
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }

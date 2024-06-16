@@ -93,11 +93,13 @@ void World::createEntities() {
 	Item* lantern = new Item("lantern", "Is a good idea to have light");
 	Item* belt = new Item("belt", "A belt to put objects");
 	Item* key = new Item("key", "A key for open a door");
+	Item* notakey = new Item("notakey", "notakey");
 
 	//entities.push_back(toilet);
 	entities.push_back(lantern);
 	entities.push_back(belt);
 	entities.push_back(key);
+	entities.push_back(notakey);
 
 	//Creatures
 	player = new Player("Player", "The player", room1);
@@ -141,7 +143,11 @@ void World::createEntities() {
 	//Some exits needs keys
 	exit12->addKey(key);
 	exit21->addKey(key);
-	exit17->addKey(key);
+	exit17->addKey(notakey);
+	exit37->addKey(notakey);
+	exit73->addKey(notakey);
+
+	//Mirar la llave
 }
 
 void World::Play() {
@@ -150,11 +156,13 @@ void World::Play() {
 
 	while (!isFinished) {
 		readInput();
-		//std::cout << std::endl;
+		std::cout << std::endl;
 	}
 }
 
+//User input and commands
 void World::readInput() {
+	//Read input from user
 	std::string input;
 	std::getline(std::cin, input);
 
@@ -166,6 +174,7 @@ void World::readInput() {
 		words.push_back(word);
 	}
 
+	//We need a lantern to do things
 	if (!player->hasLantern) {
 		if (words.size() == 2 && (words[0].compare("take") == 0 || words[0].compare("get") == 0 || words[0].compare("grab") == 0) && words[1].compare("lantern") == 0) {
 			player->GetItem(words[1]);
@@ -248,7 +257,6 @@ void World::readInput() {
 	else if (words.size() == 2) {
 		//Movement commands
 		if (words[0].compare("move") == 0) {
-			//Poner condicion para que no pete si solo pongo move
 			if (words[1].compare("north") == 0) {
 				player->Move(Coordinates::NORTH);
 			}
@@ -278,6 +286,7 @@ void World::readInput() {
 			if (words[1].compare("lantern") == 0) player->hasLantern = false;
 		}
 
+		//Scratch cellmate
 		else if (words[0].compare("scratch") == 0 && commandUnlocked) {
 			bool exitUnlocked = false;
 			for (Entity* entity : entities) {
@@ -297,6 +306,7 @@ void World::readInput() {
 			}
 		}
 
+		//Talk with an NPC
 		else if (words[0].compare("talk") == 0) {
 			for (Entity* entity : entities) {
 				if (words[1].compare(entity->name) == 0) {
@@ -319,6 +329,7 @@ void World::readInput() {
 	}
 }
 
+//function with the commands info
 void World::helpCommands() {
 	std::cout << "Available commands:" << std::endl;
 	std::cout << "  - 'north': Move the player to the north." << std::endl;
@@ -329,6 +340,7 @@ void World::helpCommands() {
 	std::cout << "  - 'take/get/grab/pick item': Grab an item and put it on your inventory." << std::endl;
 	std::cout << "  - 'inventory': See the inventory." << std::endl;
 	std::cout << "  - 'look/description': Briefly explain the room." << std::endl;
+	std::cout << "  - 'talk person': Talk with a person." << std::endl;
 	std::cout << "  - 'exit': Exit the game." << std::endl;
 	std::cout << "  - 'help': For showing this help message." << std::endl;
 }

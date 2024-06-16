@@ -12,11 +12,13 @@ void Player::Update() {
 
 }
 
+//Moving character
 void Player::Move(Coordinates direction) {
 	for (Entity* entity : location->contains) {
 		if (entity->type == EntityType::EXIT) {
 			Exit* exit = (Exit*)entity;
 			if (exit->source == location && exit->direction == direction) {
+				//We need to check if the door is closed and if it is closed, if we have the key
 				if (exit->closed) {
 					if (findObjectInventory(exit->key)) {
 						std::cout << "You opened the door with a key" << std::endl;
@@ -27,6 +29,7 @@ void Player::Move(Coordinates direction) {
 						return;
 					}
 				}
+				//We can move to the next room
 				location = exit->destination;
 				location->Description();
 				return;
@@ -36,9 +39,11 @@ void Player::Move(Coordinates direction) {
 }
 
 void Player::GetItem(std::string item) {
+	//See items in the room
 	for (auto it = location->contains.begin(); it != location->contains.end(); ) {
 		Entity* entity = *it;
 		if (entity->type == EntityType::ITEM && item.compare(entity->name) == 0) {
+			//If we find the item we put it on the inventory
 			std::cout << "You taked the " << (*it)->name << std::endl;
 			contains.push_back((Item*)entity);
 			it = location->contains.erase(it);
@@ -52,9 +57,11 @@ void Player::GetItem(std::string item) {
 }
 
 void Player::DropItem(std::string item) {
+	//See items in the inventory
 	for (auto it = contains.begin(); it != contains.end(); ) {
 		Entity* entity = *it;
 		if (entity->type == EntityType::ITEM && item.compare(entity->name) == 0) {
+			//We drop the item on the room
 			std::cout << "You dropped the " << (*it)->name << std::endl;
 			location->contains.push_back((Item*)entity);
 			it = contains.erase(it);
@@ -67,6 +74,7 @@ void Player::DropItem(std::string item) {
 	std::cout << "You don't have the " << item << std::endl;
 }
 
+//Print items from inventory
 void Player::SeeInventory() {
 	if (contains.empty()) std::cout << "The inventory is empty" << std::endl;
 	else {
@@ -79,6 +87,7 @@ void Player::SeeInventory() {
 	}
 }
 
+//Search the inventory and see if we have the item
 bool Player::findObjectInventory(Item* itemToFind) {
 	if (contains.empty()) return false;
 	else {
