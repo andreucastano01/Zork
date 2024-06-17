@@ -35,7 +35,7 @@ This project is licensed under the MIT License. For more details, see the [LICEN
 1. **Main Objective**: The main objective is to escape the prison.
 2. **Steps to Complete the Game**:
     1. Take the lantern to see anything.
-    2. Talk with the NPC and help him with the new command (scratch).
+    2. Talk with the NPC (cellmate) and help him with the new command (scratch).
     3. Take the keys from the guard's office.
     4. Return to the cell (You can't open the door in the east).
     5. Try to get a sword.
