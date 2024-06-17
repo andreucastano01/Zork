@@ -92,7 +92,6 @@ void World::createEntities() {
 	//Items
 	//Item* toilet = new Item("toilet", "A toilet you need to move", room1);
 	Item* lantern = new Item("lantern", "Is a good idea to have light", 1);
-	Item* belt = new Item("belt", "A belt to put objects", 1);
 	Item* key = new Item("key", "A key for open a door", 1);
 	Item* sword = new Item("sword", "A sword for fighting", 15);
 	Item* notakey = new Item("notakey", "notakey", 1);
@@ -100,7 +99,6 @@ void World::createEntities() {
 
 	//entities.push_back(toilet);
 	entities.push_back(lantern);
-	entities.push_back(belt);
 	entities.push_back(key);
 	entities.push_back(sword);
 	entities.push_back(notakey);
@@ -145,7 +143,6 @@ void World::createEntities() {
 	//Room contains items
 	//room1->contains.push_back(toilet);
 	room1->contains.push_back(lantern);
-	room7->contains.push_back(belt);
 	room7->contains.push_back(key);
 	room8->contains.push_back(sword);
 
