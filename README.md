@@ -41,3 +41,7 @@ This project is licensed under the MIT License. For more details, see the [LICEN
     5. Try to get a sword.
     6. Equip it.
     7. Go to the first floor and defeat the guard.
+
+### Map
+
+![Map](map.PNG)
