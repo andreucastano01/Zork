@@ -4,7 +4,9 @@
 
 class Item : public Entity {
 public:
-	Item(std::string name, std::string description);
+	int damage;
+
+	Item(std::string name, std::string description, int damage);
 	~Item();
 
 	void Update() override;

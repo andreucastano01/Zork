@@ -1,6 +1,6 @@
 #include "NPC.h"
 
-NPC::NPC(std::string name, std::string description, Room* location) : Creature(name, description, location) {
+NPC::NPC(std::string name, std::string description, Room* location, int life, int attack) : Creature(name, description, location, life, attack) {
 
 }
 
@@ -17,7 +17,7 @@ void NPC::Add(DialogueOptions option){
     conversation.push_back(option);
 }
 
-
+//Talk with an NPC
 void NPC::Talk(int currentOption) {
     bool answer = false;
     int nextOption = -99;
@@ -44,4 +44,9 @@ void NPC::Talk(int currentOption) {
         currentOption = nextOption;
         nextOption = -99;
     }
+}
+
+//Damage by enemy
+int NPC::Damage() {
+    return attack;
 }

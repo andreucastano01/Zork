@@ -20,6 +20,7 @@ public:
 	Player* player;
 	bool isFinished;
 	bool commandUnlocked;
+	bool firstTimeFirstFloor;
 
 	World();
 	~World();

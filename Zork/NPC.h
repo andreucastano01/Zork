@@ -15,10 +15,11 @@ struct DialogueOptions {
 class NPC : public Creature {
 public:
 	std::vector<DialogueOptions> conversation;
-	NPC(std::string name, std::string description, Room* location);
+	NPC(std::string name, std::string description, Room* location, int life, int attack);
 	~NPC();
 
 	void Update() override;
 	void Add(DialogueOptions option);
 	void Talk(int currentOption = 1);
+	int Damage() override;
 };

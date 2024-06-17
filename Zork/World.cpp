@@ -4,6 +4,7 @@ World::World() {
 	player = nullptr;
 	isFinished = false;
 	commandUnlocked = false;
+	firstTimeFirstFloor = false;
 }
 
 World::~World() {
@@ -90,31 +91,38 @@ void World::createEntities() {
 
 	//Items
 	//Item* toilet = new Item("toilet", "A toilet you need to move", room1);
-	Item* lantern = new Item("lantern", "Is a good idea to have light");
-	Item* belt = new Item("belt", "A belt to put objects");
-	Item* key = new Item("key", "A key for open a door");
-	Item* notakey = new Item("notakey", "notakey");
+	Item* lantern = new Item("lantern", "Is a good idea to have light", 1);
+	Item* belt = new Item("belt", "A belt to put objects", 1);
+	Item* key = new Item("key", "A key for open a door", 1);
+	Item* sword = new Item("sword", "A sword for fighting", 15);
+	Item* notakey = new Item("notakey", "notakey", 1);
+	Item* notakey2 = new Item("notakey2", "notakey2", 1);
 
 	//entities.push_back(toilet);
 	entities.push_back(lantern);
 	entities.push_back(belt);
 	entities.push_back(key);
+	entities.push_back(sword);
 	entities.push_back(notakey);
+	entities.push_back(notakey2);
 
 	//Creatures
-	player = new Player("Player", "The player", room1);
+	player = new Player("Player", "The player", room1, 50, 10);
 
 	DialogueOptions option1 = { 1, "Jajajajaja, it seems I have a new cellmate. My name is Jan. What is your name?", {}, true, 2 };
 	DialogueOptions option2 = { 2, "Nice to meet you. Can you help me scratch my back ? Since I lost my hands, it is an impossible task for me.", {} };
 	DialogueOptions option3 = { 3, "Oh, thank you. Now I feel much better. I'm going to tell you a secret. Behind the toilet there is a sewer that will help you escape. But be careful, if they catch you, you will be left without hands.", {} };
 
-	NPC* cellmate = new NPC("cellmate", "A cellmate", room1);
+	NPC* cellmate = new NPC("cellmate", "A cellmate", room1, 1, 1);
 	cellmate->Add(option1);
 	cellmate->Add(option2);
 	cellmate->Add(option3);
 
+	NPC* guard = new NPC("guard", "A guard", room4, 100, 15);
+
 	entities.push_back(player);
 	entities.push_back(cellmate);
+	entities.push_back(guard);
 
 	//Rooms contains exits
 	room1->contains.push_back(exit12);
@@ -139,15 +147,14 @@ void World::createEntities() {
 	room1->contains.push_back(lantern);
 	room7->contains.push_back(belt);
 	room7->contains.push_back(key);
+	room8->contains.push_back(sword);
 
 	//Some exits needs keys
 	exit12->addKey(key);
 	exit21->addKey(key);
 	exit17->addKey(notakey);
-	exit37->addKey(notakey);
-	exit73->addKey(notakey);
-
-	//Mirar la llave
+	exit37->addKey(notakey2);
+	exit73->addKey(notakey2);
 }
 
 void World::Play() {
@@ -157,6 +164,20 @@ void World::Play() {
 	while (!isFinished) {
 		readInput();
 		std::cout << std::endl;
+
+		if (player->location->name.compare("First floor") == 0 && !firstTimeFirstFloor) {
+			std::cout << "A guard attacked you from behind" << std::endl;
+			for (Entity* entity : entities) {
+				if (entity->name.compare("guard") == 0) {
+					NPC* guard = (NPC*)entity;
+					firstTimeFirstFloor = true;
+					if (!player->Combat(guard)) {
+						std::cout << "You lost. Try getting a sword next time and equip it." << std::endl;
+						isFinished = true;
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -232,11 +253,6 @@ void World::readInput() {
 			player->location->Description();
 		}
 
-		//Join two items (it has to make sense)
-		else if (words[0].compare("put") == 0) {
-
-		}
-
 		//Exit command
 		else if (words[0].compare("exit") == 0) {
 			isFinished = true;
@@ -286,6 +302,11 @@ void World::readInput() {
 			if (words[1].compare("lantern") == 0) player->hasLantern = false;
 		}
 
+		//Equip an item (You don't need to unequip items)
+		else if (words[0].compare("equip") == 0) {
+			player->Equip(words[1]);
+		}
+
 		//Scratch cellmate
 		else if (words[0].compare("scratch") == 0 && commandUnlocked) {
 			bool exitUnlocked = false;
@@ -323,6 +344,20 @@ void World::readInput() {
 		}
 	}
 
+	/*
+	else if (words.size() == 3) {
+		//Join two items (it has to make sense)
+		else if (words[0].compare("put") == 0) {
+			player->Put(words[1], words[2]);
+		}
+
+		else {
+			std::cout << "I can't understand you, please repeat the accion" << std::endl;
+			readInput();
+		}
+	}
+	*/
+
 	else {
 		std::cout << "I can't understand you, please repeat the accion" << std::endl;
 		readInput();
@@ -341,6 +376,7 @@ void World::helpCommands() {
 	std::cout << "  - 'inventory': See the inventory." << std::endl;
 	std::cout << "  - 'look/description': Briefly explain the room." << std::endl;
 	std::cout << "  - 'talk person': Talk with a person." << std::endl;
+	std::cout << "  - 'equip item': Equip an item." << std::endl;
 	std::cout << "  - 'exit': Exit the game." << std::endl;
 	std::cout << "  - 'help': For showing this help message." << std::endl;
 }
