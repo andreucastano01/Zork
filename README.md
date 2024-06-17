@@ -48,6 +48,6 @@ This project is licensed under the MIT License. For more details, see the [LICEN
 
 ### Extra Information
 
-I don't have an unique feature, as I added a key to the cell door (and a door that can't be opened), an npc that give you a mission (scratch her back) that unlocks a new passage and an autocombat.
+I don't have an unique feature in this project, as I added a key to the cell door (and a door that can't be opened), an npc that give you a mission (scratch her back) that unlocks a new passage and an autocombat.
 
 The thing I struggled the most was doing the npc dialog. My first idea was having 2-3 options in the dialog, but for lack of time I just do it a simple dialog where it unlocks a new command and a new path if It completes the mission. Also doing the mission, gives the npc a new dialog thanking you.
